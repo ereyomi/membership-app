@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-//const BASE_URL = 'http://localhost:3000';
-const BASE_URL = 'https://stark-retreat-23357.herokuapp.com'
+const BASE_URL = 'http://localhost:3000';
+//const BASE_URL = 'https://stark-retreat-23357.herokuapp.com'
 function getusers() {
   const url = `${BASE_URL}/api/users`;
   return axios.get(url).then(response => response.data);
