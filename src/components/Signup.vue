@@ -37,7 +37,8 @@
                     required>
                 </div>
                 <div class="my-form-control">
-                    <button type="submit">Signup</button>
+                    <Loader v-if="isLoading"/>
+                    <button v-else type="submit">Sign up</button>
                 </div>
             </form>
             <p id="login-user">
@@ -48,24 +49,29 @@
 </template>
 
 <script>
-/* import Header from './Header' */
+import Loader from './Loader' 
 import { register } from '../utils/api'
 export default {
     name: 'Signup',
-    /* components: {
-      Header
-    }, */
+    components: {
+      Loader
+    }, 
     data () {
         return {
             name: '',
             email: '',
             password: '',
-            cpassword: ''
+            cpassword: '',
+            isLoading: false
         }
         
     },
     methods: {
         async submitHandle () {
+            //show loader
+            this.startLoader()
+
+
             if(this.password === this.cpassword) {
                 //continue
                 const dataToSend = {
@@ -79,8 +85,10 @@ export default {
                     .then( data => {
                         if ( data )
                         {
+                            this.stopLoader()
                             alert('you have sucessfully registered')
                             console.log("Registered: ", data)
+
                             this.$router.push({path: '/login'})
                                
 
@@ -98,17 +106,25 @@ export default {
                         } 
                     } )
                 } catch (error) {
+                    
                     alert("contact the developer - Reg Error")
                 }
-
+                this.stopLoader()
                 
 
             }else{
                 alert("invalid password")
+                this.stopLoader()
                 this.password = '',
                 this.cpassword = ''
             }
             
+        },
+        startLoader() {
+             this.isLoading = true
+        },
+        stopLoader(){
+            this.isLoading = false
         }
     }
 }

@@ -21,7 +21,8 @@
                     required>
                 </div>
                 <div class="my-form-control">
-                    <button type="submit">{{ loginText }}</button>
+                    <Loader v-if="isLoad"/>
+                    <button v-else type="submit">{{ loginText }}</button>
                 </div>
             </form>
             <p id="login-user">
@@ -32,21 +33,30 @@
 </template>
 
 <script>
-
+import Loader from './Loader' 
 import { userLogin } from '../utils/api'
 
 export default {
     name: 'Login',
+    components: {
+      Loader
+    },
     data () {
         return {
             email: '',
             password: '',
-            loginText: 'login'
+            loginText: 'login',
+            isLoad: false,
         }
         
     },
     methods: {
         logintHandler () {
+
+            //start loader
+            this.startLoad()
+
+
             const loginData = {
                 email: this.email,
                 password: this.password
@@ -57,6 +67,9 @@ export default {
                         if ( data )
                         {
                             this.$store.dispatch( 'login', data)
+
+                            this.stopLoad()
+
                             alert('you have sucessfully logged in')
                             this.$router.replace({ name: 'profile' }).catch(err => {
                                 console.log(err)
@@ -84,13 +97,15 @@ export default {
                             
                         }
                     })
-
+                    this.stopLoad()
             
-
-            /* setTimeout(()=>{
-                this.loginText = "loading..."
-            }, 300) */
             
+        },
+        startLoad() {
+             this.isLoad = true
+        },
+        stopLoad(){
+            this.isLoad = false
         }
     }
 }
